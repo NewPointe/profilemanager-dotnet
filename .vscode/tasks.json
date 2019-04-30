@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/profilemanager-dotnet.csproj"
+                "${workspaceFolder}/NewPointe.ProfileManager.csproj"
             ],
             "problemMatcher": "$msCompile"
         },
@@ -17,7 +17,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/profilemanager-dotnet.csproj"
+                "${workspaceFolder}/NewPointe.ProfileManager.csproj"
             ],
             "problemMatcher": "$msCompile"
         },
@@ -28,7 +28,7 @@
             "args": [
                 "watch",
                 "run",
-                "${workspaceFolder}/profilemanager-dotnet.csproj"
+                "${workspaceFolder}/NewPointe.ProfileManager.csproj"
             ],
             "problemMatcher": "$msCompile"
         }

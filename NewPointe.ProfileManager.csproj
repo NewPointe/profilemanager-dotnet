@@ -1,9 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>NewPointe.ProfileManager</AssemblyName>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>profilemanager_dotnet</RootNamespace>
+    <RootNamespace>NewPointe.ProfileManager</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
