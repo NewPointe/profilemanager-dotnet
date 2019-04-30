@@ -6,14 +6,18 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
+using System.Globalization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
-namespace NewPointe.ProfileManager.Structures
+namespace NewPointe.ProfileManager.Structures.Generated
 {
-    public class DoMagicRequestItem
+    public partial class RestrictedBool
     {
-        public string Item { get; set; }
-        public string Method { get; set; }
-        public object[] Parameters { get; set; }
+        [JsonProperty("forcePIN")]
+        public ForcePin ForcePin { get; set; }
     }
+
 }

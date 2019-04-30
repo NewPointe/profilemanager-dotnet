@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 using NewPointe.ProfileManager.Structures;
+using NewPointe.ProfileManager.Structures.Generated;
 
 namespace NewPointe.ProfileManager
 {
@@ -65,7 +66,7 @@ namespace NewPointe.ProfileManager
         /// <returns>Returns the Magic's response.</returns>
         public Task<HttpResponseMessage> DoMagic(string item, string method, params object[] parameters)
         {
-            return DoMagicBatch(new[] { new DoMagicRequestItem { Item = item, Method = method, Parameters = parameters } });
+            return DoMagicBatch(new[] { new MagicRequest { Model = item, Method = method, Parameters = parameters } });
         }
 
         /// <summary>
@@ -75,27 +76,29 @@ namespace NewPointe.ProfileManager
         /// </summary>
         /// <param name="magicRequests">An array of Magic requests to make.</param>
         /// <returns>Returns the Magic's response.</returns>
-        public Task<HttpResponseMessage> DoMagicBatch(DoMagicRequestItem[] magicRequests)
+        public Task<HttpResponseMessage> DoMagicBatch(MagicRequest[] magicRequests)
         {
-            // Build the Magic request
-            var magicRoot = new Dictionary<string, Dictionary<string, object>>();
-            foreach (var magicRequest in magicRequests)
-            {
-                Dictionary<string, object> magicActions;
-                if (!magicRoot.TryGetValue(magicRequest.Item, out magicActions))
-                {
-                    magicActions = new Dictionary<string, object>();
-                    magicRoot.Add(magicRequest.Item, magicActions);
-                }
+            return client.PostAsJsonAsync("/devicemanagement/webapi/magic/do_magic", MergeMagicRequests(magicRequests));
+        }
 
-                if (!magicActions.ContainsKey(magicRequest.Method))
+        private static Dictionary<string, Dictionary<string, object>> MergeMagicRequests(MagicRequest[] magicRequests)
+        {
+            var magic = new Dictionary<string, Dictionary<string, object>>();
+            foreach (var request in magicRequests)
+            {
+                if (magic.TryGetValue(request.Model, out var actions))
                 {
-                    magicActions.Add(magicRequest.Method, new[] { magicRequest.Parameters });
+                    if (!actions.ContainsKey(request.Method))
+                    {
+                        actions.Add(request.Method, new[] { request.Parameters });
+                    }
+                }
+                else
+                {
+                    magic.Add(request.Model, new Dictionary<string, object> { { request.Method, new[] { request.Parameters } } });
                 }
             }
-
-            // Post the Magic ✨
-            return client.PostAsJsonAsync("/devicemanagement/webapi/magic/do_magic", magicRoot);
+            return magic;
         }
 
         /// <summary>
@@ -113,8 +116,7 @@ namespace NewPointe.ProfileManager
             response.EnsureSuccessStatusCode();
 
             // Read response
-            var responseJSON = await response.Content.ReadAsStringAsync();
-            var responseData = JsonConvert.DeserializeObject<DoMagicForRemoteIdsResponse>(responseJSON);
+            var responseData = await response.Content.ReadAsAsync<DoMagicForRemoteIdsResponse>();
 
             // Try extracting the remote response
             if (responseData.remote.TryGetValue("__ReturnValue", out var returnValue))
@@ -125,13 +127,9 @@ namespace NewPointe.ProfileManager
                     return innerReturnValue.Skip(1).Select(v => Convert.ToInt32(v)).ToArray();
                 }
             }
-
-            throw new Exception(@"Response was not in the expected format. Do you have the right Magic?
-Expected Format:
-{ ""remote"": { <request_key>: [[<item>, <ids>...]] }}
-
-Actual Response:
-" + responseJSON);
+            
+            //  Oops
+            throw new Exception(@"Response was not in the expected format. Do you have the right Magic?");
 
         }
 
@@ -185,9 +183,14 @@ Actual Response:
             return DoMagicForRemoteIds("device", "find_all_apple_tvs");
         }
 
-        public Task<DevicePartial[]> GetDevices(int[] ids)
+        public Task<DevicePartial[]> GetPartialDevices(int[] ids)
         {
             return DoMagicForResults<DevicePartial>("device", "get_details", new { ids });
+        }
+
+        public Task<Device[]> GetDevices(int[] ids)
+        {
+            return DoMagicForResults<Device>("device", "get_complete_details", new { ids });
         }
 
         public Task<HttpResponseMessage> LockDevice(int deviceId)
