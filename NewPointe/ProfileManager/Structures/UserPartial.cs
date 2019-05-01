@@ -20,7 +20,7 @@ namespace NewPointe.ProfileManager.Structures
         public string full_name { get; set; }
         public string guid { get; set; }
         public bool has_complete_data { get; set; }
-        public int id { get; set; }
+        public long id { get; set; }
         public string jpeg_data { get; set; }
         public string last_name { get; set; }
         public dynamic managed_apple_id { get; set; }

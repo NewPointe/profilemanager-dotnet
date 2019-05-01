@@ -166,11 +166,11 @@ Actual Response:
             return await DoMagicForRemoteIds("library_item_task", "find_all_active");
         }
 
-        public Task<HttpResponseMessage> StartLibraryTask(string target_class, int target_id, string task_type)
+        public Task<HttpResponseMessage> StartLibraryTask(string target_class, long target_id, string task_type)
         {
             return this.StartLibraryTaskWithParams(target_class, target_id, task_type, new object { });
         }
-        public Task<HttpResponseMessage> StartLibraryTaskWithParams(string target_class, int target_id, string task_type, object @params)
+        public Task<HttpResponseMessage> StartLibraryTaskWithParams(string target_class, long target_id, string task_type, object @params)
         {
             return DoMagic("library_item_task", "start_task", new { target_class, target_id, task_type, @params }, "");
         }

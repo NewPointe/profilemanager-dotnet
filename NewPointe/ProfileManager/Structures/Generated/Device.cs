@@ -65,7 +65,7 @@ namespace NewPointe.ProfileManager.Structures.Generated
         public DateTimeOffset LastAutoSyncProfiles { get; set; }
 
         [JsonProperty("last_mdm_refresh_ttl_days")]
-        public int? LastMdmRefreshTtlDays { get; set; }
+        public long? LastMdmRefreshTtlDays { get; set; }
 
         [JsonProperty("last_push_time")]
         public DateTimeOffset LastPushTime { get; set; }
@@ -92,19 +92,19 @@ namespace NewPointe.ProfileManager.Structures.Generated
         public string OrderName { get; set; }
 
         [JsonProperty("os_version_int")]
-        public int? OsVersionInt { get; set; }
+        public long? OsVersionInt { get; set; }
 
         [JsonProperty("pending_is_dep_enrolled")]
         public bool PendingIsDepEnrolled { get; set; }
 
         [JsonProperty("pending_user_id")]
-        public int? PendingUserId { get; set; }
+        public long? PendingUserId { get; set; }
 
         [JsonProperty("processing_tasks")]
         public bool ProcessingTasks { get; set; }
 
         [JsonProperty("push_avg_response_time")]
-        public int? PushAvgResponseTime { get; set; }
+        public long? PushAvgResponseTime { get; set; }
 
         [JsonProperty("push_response_times")]
         public string PushResponseTimes { get; set; }
