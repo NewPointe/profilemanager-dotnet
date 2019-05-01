@@ -62,7 +62,7 @@ namespace NewPointe.ProfileManager.Structures.Generated
         public DateTimeOffset UpdatedAt { get; set; }
 
         [JsonProperty("user_id")]
-        public long UserId { get; set; }
+        public long? UserId { get; set; }
 
         [JsonProperty("vpp_last_invite_delivered")]
         public DateTimeOffset? VppLastInviteDelivered { get; set; }
