@@ -19,6 +19,7 @@ using Newtonsoft.Json;
 
 using NewPointe.ProfileManager.Structures;
 using NewPointe.ProfileManager.Structures.Generated;
+using System.Net.Http.Formatting;
 
 namespace NewPointe.ProfileManager
 {
@@ -76,9 +77,12 @@ namespace NewPointe.ProfileManager
         /// </summary>
         /// <param name="magicRequests">An array of Magic requests to make.</param>
         /// <returns>Returns the Magic's response.</returns>
-        public Task<HttpResponseMessage> DoMagicBatch(MagicRequest[] magicRequests)
+        public async Task<HttpResponseMessage> DoMagicBatch(MagicRequest[] magicRequests)
         {
-            return client.PostAsJsonAsync("/devicemanagement/webapi/magic/do_magic", MergeMagicRequests(magicRequests));
+            var response = await client.PostAsJsonAsync("/devicemanagement/webapi/magic/do_magic", MergeMagicRequests(magicRequests));
+            // Fix for the web server not setting the Content-Type
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            return response;
         }
 
         private static Dictionary<string, Dictionary<string, object>> MergeMagicRequests(MagicRequest[] magicRequests)
